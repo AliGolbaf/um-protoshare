@@ -4,5 +4,4 @@ This repository contains the official implementation of **UM-ProtoShare** from t
 ## Model Overview
 
 ### 🔄 UM-ProtoShare Workflow
-![UM-ProtoShare Workflow](images/um_protoshare_workflow.png)
-
+![UM-ProtoShare Workflow](images/Workflow.png)
