@@ -16,7 +16,8 @@ This repository contains the official implementation of **UM-ProtoShare** from t
 Before running the code, edit `main_Code.py` and set:
 ```python
 path_to_data_images   = "/path/to/MICCAI_BraTS2020_TrainingData"
-path_to_data_clinical = "/path/to/BraTS2020_clinical_csv"
+path_to_data_clinical = "/path/to/BraTS2020_clinical_csv".
+
 ### Acknowledgment
 This repository contains modified source code from [MProtoNet](https://github.com/aywi/mprotonet) by Yuanyuan Wei, Roger Tam, and Xiaoying Tang.
 
