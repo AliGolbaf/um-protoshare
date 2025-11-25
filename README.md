@@ -29,4 +29,9 @@ This repository contains the official implementation of **UM-ProtoShare** from t
 - **Explicit multi-scale prototypes**  
   UM-ProtoShare learns separate prototype sets at multiple spatial scales, capturing tumour appearance from fine to coarse resolutions. By varying how many prototypes are allocated to each scale, we can explicitly study how emphasising different spatial scales trades off between classification accuracy and interpretability.
 
----
+### Acknowledgment
+This repository contains modified source code from [MProtoNet](https://github.com/aywi/mprotonet) by Yuanyuan Wei, Roger Tam, and Xiaoying Tang.
+
+
+
+
