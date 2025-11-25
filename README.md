@@ -4,6 +4,7 @@ This repository contains the official implementation of **UM-ProtoShare** from t
 ### 🔄 UM-ProtoShare Workflow
 ![UM-ProtoShare Workflow](images/Workflow.png)
 *Figure 1 – High-level workflow of UM-ProtoShare. The model takes multi-sequence 3D MRI as input, extracts multi-scale features with a 3D ResNet-152 backbone plus UNet-style decoder with gated fusions, matches them against a bank of shared prototypes, and aggregates prototype similarities into tumour grade predictions with prototype-based visual explanations.*
+
 ---
 ## Architecture
 ### 🧠 Backbone: 3D ResNet-152 + Lightweight UNet Decoder + Gated Fusions
@@ -16,6 +17,7 @@ Key points:
 - Truncated to preserve spatial resolution
 - Lightweight decoder with trilinear upsampling (no heavy deconvs)
 - **Gated encoder–decoder fusion** at each scale to balance semantics and localisation
+
 ---
 ### 📍 Localisation & Prototype Matching
 ![UM-ProtoShare Localisation](images/Localisation.png)
