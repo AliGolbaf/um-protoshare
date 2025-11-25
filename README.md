@@ -6,7 +6,8 @@ This repository contains the official implementation of **UM-ProtoShare** from t
 ## Architecture
 ### 🧠 Backbone: 3D ResNet-152 + Lightweight UNet Decoder + Gated Fusions
 ![UM-ProtoShare Backbone](images/Backbone.png)
-Key points:
+
+***Key points:***
 - **3D ResNet-152** encoder (Truncated to preserve localisation).
 - **Lightweight decoder** with trilinear upsampling.
 - **Gated encoder–decoder fusion** at each scale to balance semantics and localisation.
@@ -14,11 +15,11 @@ Key points:
 ### 📍 Localisation & Prototype Matching
 ![UM-ProtoShare Localisation](images/Localisation.png)
 
-Key points:  
+***Key points:***
 * **add-on module** to extract high level features and get fixed-dimensional embeddings.  
 * **mapping module** that predicts per-prototype attention maps.  
 ---
-**Core ideas:**
+***Core ideas:***
 - **Shared, class-agnostic prototypes**  
   UM-ProtoShare learns a bank of shared, class-agnostic prototypes instead of class-specific ones. Each prototype can support multiple classes through soft class–prototype coefficients derived from Grad-CAM-style importance weights. This allows the model to efficiently reuse MRI features that genuinely occur across tumour grades (e.g. peritumoural oedema, necrotic cores, enhancing rims) and reduces redundancy in the prototype space.
 
