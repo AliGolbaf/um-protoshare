@@ -14,6 +14,13 @@ This repository contains the official implementation of **UM-ProtoShare** from t
 ### Acknowledgment
 This repository contains modified source code from [MProtoNet](https://github.com/aywi/mprotonet) by Yuanyuan Wei, Roger Tam, and Xiaoying Tang.
 
-
+### Citation
+@inproceedings{Golbaf2026UMProtoShare,
+  title     = {UM-ProtoShare: UNet-Guided, Multi-Scale Shared Prototypes for Interpretable Brain Tumour Classification Using Multi-Sequence 3D MRI},
+  author    = {Golbaf, Ali and Singh, Vivek and Gaudl, Swen and Ifeachor, Emmanuel},
+  booktitle = {Proceedings of the International Conference on Medical Imaging with Deep Learning (MIDL)},
+  year      = {2026},
+  note      = {Full paper, under review}
+}
 
 
