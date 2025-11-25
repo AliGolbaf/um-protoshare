@@ -13,6 +13,7 @@ Key points:
 ---
 ### 📍 Localisation & Prototype Matching
 ![UM-ProtoShare Localisation](images/Localisation.png)
+
 Key points:  
 * **add-on module** to extract high level features and get fixed-dimensional embeddings.  
 * **mapping module** that predicts per-prototype attention maps.  
