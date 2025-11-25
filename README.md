@@ -16,8 +16,8 @@ Key points:
 Key points:  
 * **add-on module** to extract high level features and get fixed-dimensional embeddings.  
 * **mapping module** that predicts per-prototype attention maps.  
-A soft-masked, normalised mapping produces prototype-specific descriptors that are compared (via cosine similarity) with shared prototypes. These similarities are then used for classification and for generating 3D activation maps.*
-Core ideas:
+---
+**Core ideas:**
 - Shared **class-agnostic prototypes** at multiple scales
 - Per-prototype attention maps with soft-masked normalisation
 - Cosine similarity between prototype vectors and masked feature descriptors
