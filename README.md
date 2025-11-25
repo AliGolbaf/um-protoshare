@@ -11,6 +11,42 @@ This repository contains the official implementation of **UM-ProtoShare** from t
 * **Explicit multi-scale prototypes**  
   UM-ProtoShare learns separate prototype sets at multiple spatial scales, capturing tumour appearance from fine to coarse resolutions. By varying how many prototypes are allocated to each scale, we can explicitly study how emphasising different spatial scales trades off between classification accuracy and interpretability.
 
+## Repository Structure (suggested)
+
+```text
+UM-ProtoShare/
+│
+├─ models/
+│   ├─ um_protoshare.py        # UM-ProtoShare model (encoder, decoder, prototypes)
+│   └─ resnet3d.py             # 3D ResNet-152 backbone
+│
+├─ scripts/
+│   ├─ train_um_protoshare.py  # training + cross-validation
+│   ├─ eval_um_protoshare.py   # evaluation and metrics
+│   └─ visualize_prototypes.py # prototype and activation-map visualisation
+│
+├─ utils/
+│   ├─ data.py                 # data loading, preprocessing, transforms
+│   ├─ losses.py               # cls, cluster, separation, mapping, Online-CAM, diversity
+│   ├─ metrics.py              # BAC, AP, IDS, confusion matrix, etc.
+│   └─ cv.py                   # cross-validation helpers
+│
+├─ images/
+│   ├─ um_protoshare_workflow.png
+│   ├─ um_protoshare_backbone.png
+│   └─ um_protoshare_localisation.png
+│
+├─ data/
+│   └─ name_mapping.csv        # subject IDs and tumour grades (user-provided)
+│
+├─ Model_Checkpoints/          # saved models (gitignored)
+├─ Prototype_Images/           # saved prototypes and activations (gitignored)
+│
+├─ README.md
+└─ LICENSE
+
+
+
 ### Acknowledgment
 This repository contains modified source code from [MProtoNet](https://github.com/aywi/mprotonet) by Yuanyuan Wei, Roger Tam, and Xiaoying Tang.
 
