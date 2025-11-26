@@ -44,7 +44,7 @@ python main_Code.py \
   - Example:
     ```bash
     --use-unet 1    # with UNet decoder
-    --use-unet 0   # backbone-only
+    --use-unet 0    # without UNet decoder
     
 - **Fusion type (`--fusion`)**
   - `--fusion gated`: uses **gated encoder–decoder fusions** (UM-ProtoShare default).
