@@ -87,8 +87,8 @@ python main_Code.py \
 ```
 #### Key configuration options
 - **Freeze UNet decoder (`--freeze-unet`)**
-  - `--freeze-unet 1`: keep UNet decoder weights fixed.
-  - `--freeze-unet 0`: train the UNet decoder jointly with the rest of the model.
+  - `--freeze-unet 0`: keep UNet decoder weights fixed.
+  - `--freeze-unet 1`: train the UNet decoder jointly with the rest of the model.
   - Example:
     ```bash
     --freeze-unet 0
