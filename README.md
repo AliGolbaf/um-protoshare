@@ -24,7 +24,7 @@ python main_Code.py \
   --cv-repeats 1 \
   --backbone resnet152_ri \
   --n-layers 6 \
-  --train-backbone True \
+  --train-backbone 1 \
   --epochs-bb 50 \
   --batch-size-bb 1 \
   --num-workers-bb 1 \
@@ -64,10 +64,10 @@ python main_Code.py \
   --backbone resnet152_ri \
   --n-layers 6 \
   --num-prototypes 30 \
-  --use-unet True \
+  --use-unet 1 \
   --freeze-unet 1 \
   --fusion gated \
-  --train-um True \
+  --train-um 1 \
   --epochs-um 100 \
   --batch-size-um 1 \
   --num-workers-um 1 \
@@ -79,7 +79,7 @@ python main_Code.py \
   --warmup-ratio 0.2 \
   --class-assignments soft\
   --use-augmentation 1 \
-  --save-model True \
+  --save-model 1 \
   --coefs "{'cls': 1, 'clst': 0.8, 'sep': -0.08, 'L1': 0.01, 'map': 0.5, 'OC': 0.05, 'div': 0.01}"
 ```
 #### Key configuration options
