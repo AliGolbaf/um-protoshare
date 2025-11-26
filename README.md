@@ -32,7 +32,6 @@ python main_Code.py \
   --wd-bb 1e-2 \
   --class-loss-bb focal \
   --optim-bb Adam \
-  --train-um False \
   --save-model True
 ```
 #### Key configuration options
