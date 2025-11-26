@@ -99,6 +99,32 @@ python main_Code.py \
     ```
   - This loads `Model_Checkpoints/backbone_best.pt` before training prototypes.
 
+Loss functions and coefficients
+
+- **Loss functions**
+
+- **Classification loss** (controlled by `--class-loss-um`):
+  - `focal` (default) – focal loss with class weights.
+  - `cross_ent` – standard cross-entropy.
+- **Prototype-related losses** (cluster, separation, mapping, Online-CAM, diversity, L1).
+
+You can control the prototype-related coefficients using the `--coefs` argument in a
+MProtoNet-style dictionary. The keys are:
+
+- `cls`  → classification loss coefficient  
+- `clst` → cluster loss coefficient  
+- `sep`  → separation loss coefficient  
+- `L1`   → L1 regularisation on the last layer  
+- `map`  → mapping loss coefficient  
+- `OC`   → Online-CAM loss coefficient  
+- `div`  → prototype diversity loss coefficient  
+
+Default (reproducing the paper setup):
+
+```bash
+--coefs "{'cls': 1, 'clst': 0.8, 'sep': -0.08, 'L1': 0.01, 'map': 0.5, 'OC': 0.05, 'div': 0.01}"
+
+
 ### Acknowledgment
 This repository contains modified source code from [MProtoNet](https://github.com/aywi/mprotonet) by Yuanyuan Wei, Roger Tam, and Xiaoying Tang.
 
