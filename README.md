@@ -24,6 +24,9 @@ python main_Code.py \
   --cv-repeats 1 \
   --backbone resnet152_ri \
   --n-layers 6 \
+  --use-unet 1 \
+  --freeze-unet 1 \
+  --fusion gated \
   --train-backbone 1 \
   --epochs-bb 50 \
   --batch-size-bb 1 \
