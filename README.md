@@ -99,30 +99,53 @@ python main_Code.py \
     ```
   - This loads `Model_Checkpoints/backbone_best.pt` before training prototypes.
 
-Loss functions and coefficients
+- **Hard vs soft class assignment**
 
-- **Loss functions**
+  UM-ProtoShare uses **shared, class-agnostic prototypes**. Each prototype does not belong to a single class by design; instead, it can support multiple classes via **class–prototype coefficients**.
+  
+  We consider two ways of assigning prototypes to classes:
+  
+  - **Soft class assignment** (recommended)
+    - Each prototype has a **soft weight** for every class (e.g. `[0.1, 0.9]` for a binary task).
+    - These weights are derived from class-wise importance scores (e.g. Grad-CAM–style α coefficients) and normalised so that they form a distribution over classes.
+    - During prediction, the similarity of a prototype to an input is **multiplied by these weights** and contributes **fractionally** to multiple classes.
+    - Intuitively:  
+      > “This prototype is mostly an HGG prototype, but it sometimes also supports LGG when a similar pattern appears there.”
+  
+  - **Hard class assignment**
+    - Each prototype is assigned to the **single class with the highest weight** (e.g. `argmax` over the α coefficients).
+    - The prototype’s similarity then contributes **only to that class**.
+    - This behaves more like classic ProtoPNet / MProtoNet, where each prototype is tied to one class:
+      > “This prototype belongs to HGG only.”
+  
+  In code, this is typically controlled by:
+  
+  ```python
+  class_assignments = "soft"  # or "hard"
 
-- **Classification loss** (controlled by `--class-loss-um`):
-  - `focal` (default) – focal loss with class weights.
-  - `cross_ent` – standard cross-entropy.
-- **Prototype-related losses** (cluster, separation, mapping, Online-CAM, diversity, L1).
 
-You can control the prototype-related coefficients using the `--coefs` argument in a
-MProtoNet-style dictionary. The keys are:
+- **Loss Loss functions and coefficients**
 
-- `cls`  → classification loss coefficient  
-- `clst` → cluster loss coefficient  
-- `sep`  → separation loss coefficient  
-- `L1`   → L1 regularisation on the last layer  
-- `map`  → mapping loss coefficient  
-- `OC`   → Online-CAM loss coefficient  
-- `div`  → prototype diversity loss coefficient  
+  - **Classification loss** (controlled by `--class-loss-um`):
+    - `focal` (default) – focal loss with class weights.
+    - `cross_ent` – standard cross-entropy.
+  - **Prototype-related losses** (cluster, separation, mapping, Online-CAM, diversity, L1).
 
-Default (reproducing the paper setup):
-
-```bash
---coefs "{'cls': 1, 'clst': 0.8, 'sep': -0.08, 'L1': 0.01, 'map': 0.5, 'OC': 0.05, 'div': 0.01}"
+  You can control the prototype-related coefficients using the `--coefs` argument in a dictionary.
+  The keys are:
+  
+  - `cls`  → classification loss coefficient  
+  - `clst` → cluster loss coefficient  
+  - `sep`  → separation loss coefficient  
+  - `L1`   → L1 regularisation on the last layer  
+  - `map`  → mapping loss coefficient  
+  - `OC`   → Online-CAM loss coefficient  
+  - `div`  → prototype diversity loss coefficient  
+  
+  Default (reproducing the paper setup):
+  
+  ```bash
+  --coefs "{'cls': 1, 'clst': 0.8, 'sep': -0.08, 'L1': 0.01, 'map': 0.5, 'OC': 0.05, 'div': 0.01}"
 
 
 ### Acknowledgment
