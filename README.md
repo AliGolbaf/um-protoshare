@@ -12,7 +12,7 @@ This repository contains the official implementation of **UM-ProtoShare** from t
   UM-ProtoShare learns separate prototype sets at multiple spatial scales, capturing tumour appearance from fine to coarse resolutions. By varying how many prototypes are allocated to each scale, we can explicitly study how emphasising different spatial scales trades off between classification accuracy and interpretability.
 
 ### Experiment
-# Training the Backbone
+#### Training the Backbone
 ```python
 python main_Code.py \
   -di /path/to/MICCAI_BraTS2020_TrainingData \
@@ -33,9 +33,9 @@ python main_Code.py \
   --optim-bb Adam \
   --train-um False \
   --save-model True
-#### Configure data paths
 ```
-Training UM-ProtoShare
+
+##### Training UM-ProtoShare
 ```python
 python main_Code.py \
   -di /path/to/MICCAI_BraTS2020_TrainingData \
