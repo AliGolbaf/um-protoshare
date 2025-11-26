@@ -35,7 +35,23 @@ python main_Code.py \
   --train-um False \
   --save-model True
 ```
-
+#### Key configuration options
+- **Enable / disable UNet decoder (`--use-unet`)**
+  - `--use-unet True`: enables the lightweight 3D UNet-style decoder (full UM-ProtoShare).
+  - `--use-unet False`: disables the UNet decoder and uses only the backbone features.
+  - Example:
+    ```bash
+    --use-unet True    # with UNet decoder
+    --use-unet False   # backbone-only
+    
+- **Fusion type (`--fusion`)**
+  - `--fusion gated`: uses **gated encoder–decoder fusions** (UM-ProtoShare default).
+  - `--fusion concat`: uses **simple concatenation** of encoder and decoder features.
+  - Example:
+    ```bash
+    --fusion gated     # gated fusion
+    --fusion concat    # simple concatenation
+    ```  
 ##### Training UM-ProtoShare
 ```python
 python main_Code.py \
@@ -62,10 +78,26 @@ python main_Code.py \
   --optim-um AdamW \
   --warmup True \
   --warmup-ratio 0.2 \
+  --class-assignments soft\
   --use-augmentation True \
   --save-model True \
   --coefs "{'cls': 1, 'clst': 0.8, 'sep': -0.08, 'L1': 0.01, 'map': 0.5, 'OC': 0.05, 'div': 0.01}"
 ```
+#### Key configuration options
+- **Freeze UNet decoder (`--freeze-unet`)**
+  - `--freeze-unet True`: keep UNet decoder weights fixed.
+  - `--freeze-unet False`: train the UNet decoder jointly with the rest of the model.
+  - Example:
+    ```bash
+    --freeze-unet True
+    ```
+- **Pretrained backbone checkpoint**
+  - To **add a pretrained backbone** into UM-ProtoShare, use:
+    ```bash
+    --add-pretrained-backbone True \
+    --pretrained-backbone-path Model_Checkpoints/backbone_best.pt
+    ```
+  - This loads `Model_Checkpoints/backbone_best.pt` before training prototypes.
 
 ### Acknowledgment
 This repository contains modified source code from [MProtoNet](https://github.com/aywi/mprotonet) by Yuanyuan Wei, Roger Tam, and Xiaoying Tang.
