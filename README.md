@@ -12,11 +12,58 @@ This repository contains the official implementation of **UM-ProtoShare** from t
   UM-ProtoShare learns separate prototype sets at multiple spatial scales, capturing tumour appearance from fine to coarse resolutions. By varying how many prototypes are allocated to each scale, we can explicitly study how emphasising different spatial scales trades off between classification accuracy and interpretability.
 
 ### Experiment
-#### Configure data paths
-Before running the code, edit `main_Code.py` and set:
+# Training the Backbone
 ```python
-path_to_data_images   = "/path/to/MICCAI_BraTS2020_TrainingData"
-path_to_data_clinical = "/path/to/BraTS2020_clinical_csv"
+python main_Code.py \
+  -di /path/to/MICCAI_BraTS2020_TrainingData \
+  -dc /path/to/clinical_dir \
+  --clinical-csv name_mapping.csv \
+  --seed 0 \
+  --cv-folds 5 \
+  --cv-repeats 1 \
+  --backbone resnet152_ri \
+  --n-layers 6 \
+  --train-backbone True \
+  --epochs-bb 50 \
+  --batch-size-bb 1 \
+  --num-workers-bb 1 \
+  --lr-bb 1e-3 \
+  --wd-bb 1e-2 \
+  --class-loss-bb focal \
+  --optim-bb Adam \
+  --train-um False \
+  --save-model True
+#### Configure data paths
+```
+Training UM-ProtoShare
+```python
+python main_Code.py \
+  -di /path/to/MICCAI_BraTS2020_TrainingData \
+  -dc /path/to/clinical_dir \
+  --clinical-csv name_mapping.csv \
+  --seed 0 \
+  --cv-folds 5 \
+  --cv-repeats 1 \
+  --p-mode 5 \
+  --backbone resnet152_ri \
+  --n-layers 6 \
+  --num-prototypes 30 \
+  --use-unet True \
+  --freeze-unet False \
+  --fusion gated \
+  --train-um True \
+  --epochs-um 100 \
+  --batch-size-um 1 \
+  --num-workers-um 1 \
+  --lr-um 1e-3 \
+  --wd-um 1e-2 \
+  --class-loss-um focal \
+  --optim-um AdamW \
+  --warmup True \
+  --warmup-ratio 0.2 \
+  --use-augmentation True \
+  --save-model True \
+  --coefs "{'cls': 1, 'clst': 0.8, 'sep': -0.08, 'L1': 0.01, 'map': 0.5, 'OC': 0.05, 'div': 0.01}"
 ```
 
 ### Acknowledgment
