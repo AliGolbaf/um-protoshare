@@ -169,8 +169,9 @@ python main_Code.py \
   - scale 3 (coarsest feature map) → 50% of K  
   - scale 2 (mid-level feature map) → 30% of K  
   - scale 1 (finest feature map) → 20% of K
-  Changing --num-prototypes on the command line changes the total number of prototypes K, and the model will automatically recompute the per-scale counts using the 50/30/20 split.
-  If you want to use a different per-scale allocation (e.g. 40/40/20 or 33/33/34), please edit the multipliers in models.py.
+  
+  Changing `--num-prototypes` on the command line changes the total number of prototypes K, and the model will automatically recompute the per-scale counts using the 50/30/20 split.
+  If you want to use a different per-scale allocation (e.g. 40/40/20 or 33/33/34), please edit the multipliers in `models.py`.
 
 
 ### Acknowledgment
