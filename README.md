@@ -20,7 +20,7 @@ python main_Code.py \
   --clinical-csv name_mapping.csv \
   --seed 0 \
   --cv-folds 5 \
-  --transfer-learning True \
+  --transfer-learning 1 \
   --cv-repeats 1 \
   --backbone resnet152_ri \
   --n-layers 6 \
@@ -32,16 +32,16 @@ python main_Code.py \
   --wd-bb 1e-2 \
   --class-loss-bb focal \
   --optim-bb Adam \
-  --save-model True
+  --save-model 1
 ```
 #### Key configuration options
 - **Enable / disable UNet decoder (`--use-unet`)**
-  - `--use-unet True`: enables the lightweight 3D UNet-style decoder (full UM-ProtoShare).
-  - `--use-unet False`: disables the UNet decoder and uses only the backbone features.
+  - `--use-unet 1`: enables the lightweight 3D UNet-style decoder (full UM-ProtoShare).
+  - `--use-unet 0`: disables the UNet decoder and uses only the backbone features.
   - Example:
     ```bash
-    --use-unet True    # with UNet decoder
-    --use-unet False   # backbone-only
+    --use-unet 1    # with UNet decoder
+    --use-unet 0   # backbone-only
     
 - **Fusion type (`--fusion`)**
   - `--fusion gated`: uses **gated encoder–decoder fusions** (UM-ProtoShare default).
@@ -65,7 +65,7 @@ python main_Code.py \
   --n-layers 6 \
   --num-prototypes 30 \
   --use-unet True \
-  --freeze-unet False \
+  --freeze-unet 1 \
   --fusion gated \
   --train-um True \
   --epochs-um 100 \
@@ -75,25 +75,25 @@ python main_Code.py \
   --wd-um 1e-2 \
   --class-loss-um focal \
   --optim-um AdamW \
-  --warmup True \
+  --warmup 1 \
   --warmup-ratio 0.2 \
   --class-assignments soft\
-  --use-augmentation True \
+  --use-augmentation 1 \
   --save-model True \
   --coefs "{'cls': 1, 'clst': 0.8, 'sep': -0.08, 'L1': 0.01, 'map': 0.5, 'OC': 0.05, 'div': 0.01}"
 ```
 #### Key configuration options
 - **Freeze UNet decoder (`--freeze-unet`)**
-  - `--freeze-unet True`: keep UNet decoder weights fixed.
-  - `--freeze-unet False`: train the UNet decoder jointly with the rest of the model.
+  - `--freeze-unet 1`: keep UNet decoder weights fixed.
+  - `--freeze-unet 0`: train the UNet decoder jointly with the rest of the model.
   - Example:
     ```bash
-    --freeze-unet True
+    --freeze-unet 0
     ```
 - **Pretrained backbone checkpoint**
   - To **add a pretrained backbone** into UM-ProtoShare, use:
     ```bash
-    --add-pretrained-backbone True \
+    --add-pretrained-backbone 1 \
     --pretrained-backbone-path Model_Checkpoints/backbone_best.pt
     ```
   - This loads `Model_Checkpoints/backbone_best.pt` before training prototypes.
