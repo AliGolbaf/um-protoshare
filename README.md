@@ -52,7 +52,7 @@ python main_Code.py \
     --fusion gated     # gated fusion
     --fusion concat    # simple concatenation
     ```  
-##### Training UM-ProtoShare
+#### Training UM-ProtoShare
 ```python
 python main_Code.py \
   -di /path/to/MICCAI_BraTS2020_TrainingData \
@@ -98,54 +98,79 @@ python main_Code.py \
     --pretrained-backbone-path Model_Checkpoints/backbone_best.pt
     ```
   - This loads `Model_Checkpoints/backbone_best.pt` before training prototypes.
+- **Hard vs soft class assignment (`--class-assignments`)**
 
-- **Hard vs soft class assignment**
+  UM-ProtoShare uses **shared, class-agnostic prototypes**. Each prototype can support multiple classes through class–prototype coefficients. You can choose how these coefficients are used:
+  - `--class-assignments soft` (recommended)  
+    - Each prototype has a **soft weight** for every class (e.g. `[0.2, 0.8]`).
+    - These weights are derived from Grad-CAM–style importance scores and normalised.
+    - During prediction, a prototype’s similarity contributes **fractionally** to multiple classes.
+    - Intuitively: a prototype can be “mostly HGG” but still partially support LGG.
+  - `--class-assignments hard`  
+    - Each prototype is assigned to the **single class with the highest weight** (argmax).
+    - Its similarity then contributes **only to that class**, like classic ProtoPNet/MProtoNet.
+  - Example:
+    ```bash
+    --class-assignments soft   # shared prototypes (UM-ProtoShare default)
+    --class-assignments hard   # class-specific prototypes, ProtoPNet-like
+    ```
+- **Loss functions and coefficients**
+  - **Classification loss** (`--class-loss-um`)
+    - `focal` (default): focal loss with class weights.
+    - `cross_ent`: standard cross-entropy.
+    - Example:
+      ```bash
+      --class-loss-um focal
+      --class-loss-um cross_ent
+      ```
+  - **Prototype-related losses** (cluster, separation, mapping, Online-CAM, diversity, L1)  
 
-  UM-ProtoShare uses **shared, class-agnostic prototypes**. Each prototype does not belong to a single class by design; instead, it can support multiple classes via **class–prototype coefficients**.
-  
-  We consider two ways of assigning prototypes to classes:
-  
-  - **Soft class assignment** (recommended)
-    - Each prototype has a **soft weight** for every class (e.g. `[0.1, 0.9]` for a binary task).
-    - These weights are derived from class-wise importance scores (e.g. Grad-CAM–style α coefficients) and normalised so that they form a distribution over classes.
-    - During prediction, the similarity of a prototype to an input is **multiplied by these weights** and contributes **fractionally** to multiple classes.
-    - Intuitively:  
-      > “This prototype is mostly an HGG prototype, but it sometimes also supports LGG when a similar pattern appears there.”
-  
-  - **Hard class assignment**
-    - Each prototype is assigned to the **single class with the highest weight** (e.g. `argmax` over the α coefficients).
-    - The prototype’s similarity then contributes **only to that class**.
-    - This behaves more like classic ProtoPNet / MProtoNet, where each prototype is tied to one class:
-      > “This prototype belongs to HGG only.”
-  
-  In code, this is typically controlled by:
-  
-  ```python
-  class_assignments = "soft"  # or "hard"
+    These are controlled via the `--coefs` argument, using a dictionary:
+    - `cls`  → classification loss coefficient  
+    - `clst` → cluster loss coefficient  
+    - `sep`  → separation loss coefficient  
+    - `L1`   → L1 regularisation of the last layer  
+    - `map`  → mapping loss coefficient  
+    - `OC`   → Online-CAM loss coefficient  
+    - `div`  → prototype diversity loss coefficient  
+    Default (used in the paper):
+    ```bash
+    --coefs "{'cls': 1, 'clst': 0.8, 'sep': -0.08, 'L1': 0.01, 'map': 0.5, 'OC': 0.05, 'div': 0.01}"
+    ```
+- **Prototype mode (`--p-mode`)**
 
+  The `--p-mode` flag switches between different prototype model variants:
+  - `--p-mode 1` – **ProtoPNet-style**
+    - Class-specific prototypes.
+    - No mapping loss (`map ≈ 0`), no Online-CAM (`OC ≈ 0`).
+    - Use this to mimic classic ProtoPNet in 3D.
+  - `--p-mode 2` – **XProtoNet-style**
+    - Adds a **mapping module** that predicts prototype attention maps.
+    - Mapping loss on (`map > 0`), Online-CAM off (`OC ≈ 0`).
+  - `--p-mode 3` – **MProtoNet**
+    - Mapping module + mapping loss (`map > 0`).
+    - Online-CAM loss enabled (`OC > 0`), but **class-specific** prototypes.
+    - Use this to reproduce the original MProtoNet-style behaviour.
+  - `--p-mode 4` – **UM-ProtoShare without Online-CAM**
+    - Multi-scale **shared** prototypes.
+    - UNet-guided features with encoder–decoder fusion.
+    - Mapping loss on (`map > 0`), **Online-CAM loss off** (`OC ≈ 0`).
+    - Use this as an ablation of UM-ProtoShare **without** Online-CAM regularisation.
+  - `--p-mode 5` – **UM-ProtoShare with Online-CAM (full model)**
+    - Multi-scale **shared** prototypes.
+    - UNet-guided features with encoder–decoder fusion.
+    - Mapping loss + **Online-CAM loss** + diversity loss.
+    - This is the **main configuration** used in the UM-ProtoShare paper.
 
-- **Loss Loss functions and coefficients**
+- **Prototype scale allocation (multi-scale prototypes)**
 
-  - **Classification loss** (controlled by `--class-loss-um`):
-    - `focal` (default) – focal loss with class weights.
-    - `cross_ent` – standard cross-entropy.
-  - **Prototype-related losses** (cluster, separation, mapping, Online-CAM, diversity, L1).
-
-  You can control the prototype-related coefficients using the `--coefs` argument in a dictionary.
-  The keys are:
-  
-  - `cls`  → classification loss coefficient  
-  - `clst` → cluster loss coefficient  
-  - `sep`  → separation loss coefficient  
-  - `L1`   → L1 regularisation on the last layer  
-  - `map`  → mapping loss coefficient  
-  - `OC`   → Online-CAM loss coefficient  
-  - `div`  → prototype diversity loss coefficient  
-  
-  Default (reproducing the paper setup):
-  
-  ```bash
-  --coefs "{'cls': 1, 'clst': 0.8, 'sep': -0.08, 'L1': 0.01, 'map': 0.5, 'OC': 0.05, 'div': 0.01}"
+  For UM-ProtoShare (`--p-mode 4` or `--p-mode 5`), the total number of prototypes  
+  `--num-prototypes K` is automatically split across **three spatial scales**:
+  - scale 3 (coarsest feature map) → 50% of K  
+  - scale 2 (mid-level feature map) → 30% of K  
+  - scale 1 (finest feature map) → 20% of K
+  Changing --num-prototypes on the command line changes the total number of prototypes K, and the model will automatically recompute the per-scale counts using the 50/30/20 split.
+  If you want to use a different per-scale allocation (e.g. 40/40/20 or 33/33/34), please edit the multipliers in models.py.
 
 
 ### Acknowledgment
