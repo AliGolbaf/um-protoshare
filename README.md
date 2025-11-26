@@ -20,6 +20,7 @@ python main_Code.py \
   --clinical-csv name_mapping.csv \
   --seed 0 \
   --cv-folds 5 \
+  --transfer-learning True \
   --cv-repeats 1 \
   --backbone resnet152_ri \
   --n-layers 6 \
