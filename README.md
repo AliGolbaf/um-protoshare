@@ -180,12 +180,12 @@ This repository contains modified source code from [MProtoNet](https://github.co
 
 ### Citation
 ```bibtex
-@inproceedings{Golbaf2026UMProtoShare,
-  title     = {UM-ProtoShare: UNet-Guided, Multi-Scale Shared Prototypes for Interpretable Brain Tumour Classification Using Multi-Sequence 3D MRI},
-  author    = {Golbaf, Ali and Singh, Vivek and Gaudl, Swen and Ifeachor, Emmanuel},
-  booktitle = {Proceedings of the International Conference on Medical Imaging with Deep Learning (MIDL)},
-  year      = {2026},
-  note      = {Full paper, under review}
-}
+@inproceedings{golbaf2025umprotoshare,
+  title     =  {{UM}-ProtoShare: {UN}et-Guided, Multi-Scale Shared Prototypes for Interpretable Brain Tumour Classification Using Multi-Sequence 3D {MRI}},
+  author    =  {Ali Golbaf and Vivek Singh and Swen Gaudl and Emmanuel Ifeachor},
+  booktitle =  {Submitted to Medical Imaging with Deep Learning},
+  year      =  {2025},
+  url       =  {https://openreview.net/forum?id=vvjP1Pdvjx},
+  note      =  {under review}}
 
 
