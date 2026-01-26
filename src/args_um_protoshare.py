@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-The code for: args
-Written by: Ali Golbaf
+* The code for: args
+* Written by: Ali Golbaf
 """
 ################################################################################
 ################################################################################
@@ -307,3 +307,4 @@ def parse_arguments():
     
 
     return parser.parse_args()
+
