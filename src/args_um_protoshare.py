@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """
-The code for:
-    args
-Author: Ali Golbaf
+The code for: args
+Written by: Ali Golbaf
 """
 ################################################################################
 ################################################################################
@@ -306,4 +305,5 @@ def parse_arguments():
                               "M=MProtoNet, D=Deconvolution, G=GradCAM, U=Guided GradCAM, O=Occlusion."),)
     
     
+
     return parser.parse_args()
