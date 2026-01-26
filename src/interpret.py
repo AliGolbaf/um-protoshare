@@ -4,8 +4,8 @@
 
      Works with:
     - MProtoNet / ProtoPNet family (p_mode < 4)
-    - U-ProtoShare (p_mode = 4)
-    - U-ProtoShare-MS (p_mode ≥ 5)
+    - UM-ProtoShare (p_mode = 4)
+    - UM-ProtoShare-MS (p_mode ≥ 5)
 
     Written by: Ali Golbaf (ali.golbaf71@gmail.com)
 """
@@ -87,25 +87,19 @@ def upsample(attr, data):
 
 ################################################################################
 ################################################################################
-""" Main: attribute() """
+""" Main """
 def attribute(net: nn.Module,
               data: torch.Tensor,
               target: torch.Tensor,
               device: Union[str, torch.device],
               method: str,
               show_progress: bool = False) -> torch.Tensor:
-    """
-    net    : model
-    data   : [B, C, H, W, D]
-    target : [B] integer class ids
-    method : in attr_methods
-    """
+                  
     warnings.filterwarnings('ignore', message="Input Tensor \\d+ did not already require gradients,")
     warnings.filterwarnings('ignore', message="Setting backward hooks on ReLU activations.The hook")
     warnings.filterwarnings('ignore', message="Setting forward, backward hooks and attributes on n")
-
     # -------------------------------------------------------------------------
-    # MProtoNet-style (unified for both families)
+    # MProtoNet (unified for both families)
     if method == 'MProtoNet':
         if isinstance(net, nn.DataParallel):
             net = net.module
@@ -141,7 +135,7 @@ def attribute(net: nn.Module,
                     return upsample(attr, data)
 
             else:
-                # U-ProtoShare family (multi-scale)
+                # UM-ProtoShare family (multi-scale)
                 out = net.push_forward(data)
                 # p_mode ≥ 5 may return 3-tuples (PXs, Ds, PMs), p_mode=4 returns (PXs, Ds)
                 if isinstance(out, (tuple, list)) and len(out) >= 2:
