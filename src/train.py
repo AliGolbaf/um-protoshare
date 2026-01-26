@@ -377,24 +377,24 @@ def scale_slice(model, scale: int):
 
 def lse_pool_prelast_conv(F_l, pmap_module, model):
     # features BEFORE last conv of the mapping head (bn1->relu output)
-    Z = pmap_module.act_1(pmap_module.bn_1(pmap_module.conv_1(F_l)))  # [B,128,D,H,W]
-    return model.lse_pooling(Z.flatten(2))                             # [B,128]
+    Z = pmap_module.act_1(pmap_module.bn_1(pmap_module.conv_1(F_l)))  
+    return model.lse_pooling(Z.flatten(2))                           
 
 def online_cam_logits_single(x_feat, p_map_module, last_layer, model):
     # Single-scale OC (p_mode in {2,3}), no slicing needed
-    u = lse_pool_prelast_conv(x_feat, p_map_module, model)            # [B,128]
-    W_conv = p_map_module.conv_2.weight.flatten(1).t()                 # [128,K]
-    k_scores = u @ W_conv                                              # [B,K]
-    return k_scores @ last_layer.weight.t()                            # [B,C]
+    u = lse_pool_prelast_conv(x_feat, p_map_module, model)            
+    W_conv = p_map_module.conv_2.weight.flatten(1).t()                
+    k_scores = u @ W_conv                                          
+    return k_scores @ last_layer.weight.t()                            
 
 def online_cam_logits_multi(F_l, pmap_module, last_layer, model, scale_idx):
     # Multi-scale OC: slice classifier to this scale’s K
-    u = lse_pool_prelast_conv(F_l, pmap_module, model)                # [B,128]
-    W_conv = pmap_module.conv_2.weight.flatten(1).t()                  # [128,Kℓ]
-    k_scores = u @ W_conv                                              # [B,Kℓ]
+    u = lse_pool_prelast_conv(F_l, pmap_module, model)              
+    W_conv = pmap_module.conv_2.weight.flatten(1).t()                  
+    k_scores = u @ W_conv                                           
     off, K = scale_slice(model, scale_idx)
-    W_slice = last_layer.weight[:, off:off+K]                          # [C,Kℓ]
-    return k_scores @ W_slice.t()                                      # [B,C]
+    W_slice = last_layer.weight[:, off:off+K]                       
+    return k_scores @ W_slice.t()                                  
 
 def map_loss_equiv(F_l, P_l, pmap_module, model, scale_factor: float):
     # Compare map(Aug(F)) vs Aug(map(F)) at the same spatial size
@@ -402,7 +402,7 @@ def map_loss_equiv(F_l, P_l, pmap_module, model, scale_factor: float):
         return 0.0
     size = tuple(int(s * scale_factor) for s in F_l.shape[-3:])
     F_aug  = F.interpolate(F_l, size=size, mode='trilinear', align_corners=False)
-    P_augA = model.get_p_map_scale_sharp(F_aug, pmap_module, sharpening=True)  # [B,K,D',H',W']
+    P_augA = model.get_p_map_scale_sharp(F_aug, pmap_module, sharpening=True) 
     P_augB = F.interpolate(P_l, size=size, mode='trilinear', align_corners=False)
     return (P_augA - P_augB).abs().mean()
 
@@ -415,9 +415,9 @@ def diversity_cos(P_bank):
         P = P_bank[:, :, 0, 0, 0]
     else:
         P = P_bank
-    Pn = F.normalize(P, p=2, dim=1)               # [K,128]
-    S = Pn @ Pn.t()                               # [K,K]
-    return S.triu(1).abs().mean()                 # scalar
+    Pn = F.normalize(P, p=2, dim=1)              
+    S = Pn @ Pn.t()                             
+    return S.triu(1).abs().mean()              
 
 def pdist(P): 
     return F.pdist(P[:, :, 0, 0, 0]).mean()
@@ -527,13 +527,13 @@ def train_one_epoch_UM_ProtoShare(stage,
                 # SOFT (Refer to Paper): α from non-negative classifier weights, per-proto normalised
                 if class_assignments == "soft":
                     
-                    alpha = alpha_from_classifier(model.last_layer)   # [C,K]
-                    alpha_y   = alpha[label_target]                   # [B,K]
-                    alpha_not = 1.0 - alpha_y                         # [B,K]
+                    alpha = alpha_from_classifier(model.last_layer)   
+                    alpha_y   = alpha[label_target]                  
+                    alpha_not = 1.0 - alpha_y                       
 
                     # Weighted SUM over prototypes (soft pooling)
-                    act_correct = (alpha_y   * proto_act).sum(dim=1)  # [B]
-                    act_wrong   = (alpha_not * proto_act).sum(dim=1)  # [B]
+                    act_correct = (alpha_y   * proto_act).sum(dim=1)
+                    act_wrong   = (alpha_not * proto_act).sum(dim=1)  
 
                     clst_term = (margin - act_correct).clamp_min(0.0) * cw
                     sep_term  = (act_wrong  - margin).clamp_min(0.0) * cw
@@ -545,13 +545,13 @@ def train_one_epoch_UM_ProtoShare(stage,
             if p_mode>=4: # Soft class assigment for UM-Protoshare
             
                 # SOFT (paper Eq.14): α from non-negative classifier weights, per-proto normalised
-                alpha = alpha_from_classifier(model.last_layer)   # [C,K]
-                alpha_y   = alpha[label_target]                   # [B,K]
-                alpha_not = 1.0 - alpha_y                         # [B,K]
+                alpha = alpha_from_classifier(model.last_layer)   
+                alpha_y   = alpha[label_target]                   
+                alpha_not = 1.0 - alpha_y                         
 
                 # Weighted SUM over prototypes (soft pooling)
-                act_correct = (alpha_y   * proto_act).sum(dim=1)  # [B]
-                act_wrong   = (alpha_not * proto_act).sum(dim=1)  # [B]
+                act_correct = (alpha_y   * proto_act).sum(dim=1)  
+                act_wrong   = (alpha_not * proto_act).sum(dim=1)  
 
                 clst_term = (margin - act_correct).clamp_min(0.0) * cw
                 sep_term  = (act_wrong  - margin).clamp_min(0.0) * cw
@@ -598,7 +598,7 @@ def train_one_epoch_UM_ProtoShare(stage,
                     # total (joint) --------------------------------------------
                     loss = L_cls + L_clst + L_sep + L_map + L_oc 
                 
-                elif p_mode < 5: # UM_ProtoShare without Online-cam and P_Map
+                elif p_mode < 5: # UM_ProtoShare without Online-cam and p_map
                     # total (joint) --------------------------------------------
                     loss = L_cls + L_clst + L_sep 
                     
@@ -616,7 +616,7 @@ def train_one_epoch_UM_ProtoShare(stage,
                 loss += L_div
                 
             elif p_mode >= 2:
-                if p_mode >= 3: # UM_ProtoShare with Online-cam and P_Map
+                if p_mode >= 3: # UM_ProtoShare with Online-cam and p_map
                     # single-scale (x_feat, p_map)
                     ri = torch.randint(2, (1,), device=device).item()
                     scale = (0.75, 0.875)[ri]
@@ -634,7 +634,7 @@ def train_one_epoch_UM_ProtoShare(stage,
                     # total (joint) ------------------------------------------------
                     loss = L_cls + L_clst + L_sep + L_map + L_oc
             
-                else: # UM_ProtoShare without Online-cam and P_Map
+                else: # UM_ProtoShare without Online-cam and p_map
                     # total (joint) ------------------------------------------------
                     loss = L_cls + L_clst + L_sep
             else: 
@@ -695,4 +695,5 @@ def train_one_epoch_UM_ProtoShare(stage,
             
             
             
+
             
