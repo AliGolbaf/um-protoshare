@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """
-    The code for:
-    Pushing shared multi-scale prototypes (UM-ProtoShare)
+Pushing shared multi-scale prototypes (UM-ProtoShare)
 
-     Written by: Ali Golbaf (ali.golbaf71@gmail.com)
+Written by: Ali Golbaf (ali.golbaf71@gmail.com)
 """
 ################################################################################
 ################################################################################
@@ -34,8 +33,6 @@ def pf_unpack_multi(out):
     Accepts:
         out = ((PX3,PX2,PX1), (D3,D2,D1))                    # p_mode=4 (no p-maps)
            or ((PX3,PX2,PX1), (D3,D2,D1), (PM3,PM2,PM1))     # p_mode=5 (with p-maps)
-    Returns:
-        (PX3,PX2,PX1), (D3,D2,D1), (PM3,PM2,PM1 or Nones)
     """
     if not (isinstance(out, (tuple, list)) and len(out) >= 2):
         raise ValueError("push_forward must return ((PX3,PX2,PX1),(D3,D2,D1),[(PM3,PM2,PM1)]) for p_mode>=4.")
