@@ -1,8 +1,6 @@
 """
 * Data loader
-
-* Written by:
-    Ali Golbaf (ali.golbaf@plymouth.ac.uk)
+* Written by: Ali Golbaf (ali.golbaf71@gmail.com)
 """
 ################################################################################
 ################################################################################
@@ -75,4 +73,5 @@ class SubjectsDataset(Dataset):
     
     
     
+
     
