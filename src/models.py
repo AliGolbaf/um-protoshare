@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """
-The code for:
 Prototype-based 3D CNNs (Backbones + UM_ProtoShare)
 
-    Written by: Ali Golbaf (ali.golbaf71@gmail.com)
+Written by: Ali Golbaf (ali.golbaf71@gmail.com)
 """
 ################################################################################
 ################################################################################
@@ -203,7 +202,6 @@ def load_resnet2d_into_3d(model3d: nn.Module,
     """
     Inflate & copy weights from a 2D torchvision ResNet into an already-constructed 3D ResNet (4-channel input).
 
-    Works by transforming a pretrained 2D state_dict into a 3D-compatible one and loading it with strict=False.
     - Conv2d -> Conv3d: repeat along depth (kD) and optionally divide by kD.
     - First conv (3->4 in): the 4th channel is set to mean(R,G,B).
     - BN params & running stats are copied as-is.
@@ -216,9 +214,6 @@ def load_resnet2d_into_3d(model3d: nn.Module,
         scale_by_depth: divide repeated kernels by kD to preserve activation magnitude.
         freeze_bn: set BN affine params to requires_grad=False after loading.
         verbose: print a brief summary.
-
-    Returns:
-        report: dict with counts and a small list of skipped parameters.
     """
     if "resnet152" in back_bone_name:
         resnet2d = torch_models.resnet152(weights='IMAGENET1K_V2')
@@ -239,7 +234,7 @@ def load_resnet2d_into_3d(model3d: nn.Module,
     tgt_keys = list(tgt_sd.keys())
     suffix_index = {}
     for k in tgt_keys:
-        suffix_index.setdefault(k.split(".", 0)[-1], set()).add(k)  # trivial
+        suffix_index.setdefault(k.split(".", 0)[-1], set()).add(k)
         suffix_index.setdefault(k, set()).add(k)  # whole key
         # also index by full suffix after potential nesting:
         # e.g., 'backbone.layer1.0.conv1.weight' -> 'layer1.0.conv1.weight'
@@ -293,8 +288,8 @@ def load_resnet2d_into_3d(model3d: nn.Module,
         if w2d.ndim == 4 and t3.ndim == 5 and k2d.endswith("weight"):
             # Inflate kernel along depth
             kd = t3.shape[2]
-            w = w2d.detach().to(dtype=t3.dtype, device=t3.device)  # [out,in,kh,kw]
-            w = w.unsqueeze(2).repeat(1, 1, kd, 1, 1)              # [out,in,kd,kh,kw]
+            w = w2d.detach().to(dtype=t3.dtype, device=t3.device)
+            w = w.unsqueeze(2).repeat(1, 1, kd, 1, 1)         
             if scale_by_depth and kd > 1:
                 w = w / float(kd)
 
@@ -724,9 +719,9 @@ class ResNet_3D(nn.Module):
                 
                 # 3. Gated fusion per scale
                 if self.fusion == "gated":
-                    f_3, _ = self.gated_fuse3d_channel_3(f_3_backbone, f_3_unet)    # [B, C3, ...]
-                    f_2, _ = self.gated_fuse3d_channel_2(f_2_backbone, f_2_unet)    # [B, C2, ...]
-                    f_1, _ = self.gated_fuse3d_channel_1(f_1_backbone, f_1_unet)    # [B, C1, ...]
+                    f_3, _ = self.gated_fuse3d_channel_3(f_3_backbone, f_3_unet)  
+                    f_2, _ = self.gated_fuse3d_channel_2(f_2_backbone, f_2_unet)  
+                    f_1, _ = self.gated_fuse3d_channel_1(f_1_backbone, f_1_unet)  
                     
                 if self.fusion =="concat":
                     f_3 = self.concat_proj_3(torch.cat([f_3_backbone, f_3_unet], dim=1))
@@ -1011,7 +1006,7 @@ class UM_Proto_Share(nn.Module):
         # Einsum over spatial dims then average by spatial size (MProtoNet style)
         # f_x: [B,128,H,W,D], p_m: [B,K,H,W,D] -> [B,K,128,1,1,1]
         p_size = f_x.flatten(2).shape[2]
-        return (torch.einsum('bphwd,bchwd->bpc', p_m, f_x) / p_size)[(...,) + (None,)*3]  # [B,K,128,1,1,1]
+        return (torch.einsum('bphwd,bchwd->bpc', p_m, f_x) / p_size)[(...,) + (None,)*3] 
       
     def get_p_map_scale_sharp(self, x, p_map_module, sharpening = True):
         # Scale-specific p-map: BN/ReLU -> scale -> (optional) sharpen
