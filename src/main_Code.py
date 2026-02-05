@@ -103,9 +103,10 @@ if __name__ == '__main__':
     # P_mode -----------------------------------------------------------------------
     # Explanations:
     # p_mode = 1   : ProtoPnet
-    # p_mode = 2   : ProtoPnet  with top_k values
-    # p_mode = 3   : Mprotonet  with p_map
-    # p_mode = 4/5 : Mprotonet  with/without p_map
+    # p_mode = 2   : XProtoNet
+    # p_mode = 3   : MProtoNet
+    # p_mode = 4   :  UM-ProtoShare without Online-CAM
+    # p_mode = 5   :  UM-ProtoShare with Online-CAM (full model)
     p_mode = args.p_mode
 
     # U-NET ------------------------------------------------------------------------
